@@ -1,18 +1,19 @@
 import { init, Sprite, GameLoop, loadImage, setImagePath, SpriteSheet } from 'kontra';
-// import ss from '../ss.png'
-import ss from '../CowBoySmol.png'
+import cowboySprite from '../CowBoySmol.png'
 import { PlanetDecor } from './planet.decor';
-
+const STARS_COUNT = 30
 const canv = document.getElementById('a');
 canv.width = 1920
 canv.height = 1080
 let { canvas } = init(canv);
 
-loadImage(ss).then(im => {
+loadImage(cowboySprite).then(image => {
+  let playerState = 'idle'
+  let stars = []
+  let rock = new PlanetDecor(100, 250 - 30).create()
+
   let spriteSheet = SpriteSheet({
-    image: im,
-    // frameWidth: 165,
-    // frameHeight: 57,
+    image,
     frameWidth: 23,
     frameHeight: 10,
     animations: {
@@ -32,61 +33,70 @@ loadImage(ss).then(im => {
   });
   let hero = Sprite({
     x: 150,
-    y: canv.height / 2 - 100, 
-    width: 575,     // width and height of the sprite rectangle
+    y: 150, 
+    width: 575,
     height: 250,
     // anchor: {x: 0.5, y: 0.5},
     animations: spriteSheet.animations
   });
 
-  let sprite = Sprite({
-    x: 0,        // starting x,y position of the sprite
-    y: canv.height / 2,
-    color: '#ddd',  // fill color of the sprite rectangle
-    width: canv.width,     // width and height of the sprite rectangle
-    height: canv.height / 2,
+  let planet = Sprite({
+    x: 0,
+    y: 250,
+    color: '#ddd',
+    width: canv.width,
+    height: canv.height,
   });
-  var isAttacking = false
-  var isHurt = false
 
-  let rock = new PlanetDecor(100, canv.height / 2 - 30)
-  rock = rock.create()
-  let loop = GameLoop({  // create the main game loop
+  // make stars
+  for (let i = 0; i < STARS_COUNT; i++) {
+    const randomStarSize = ~~(Math.random() * 10) + 1
+    const randomStarSpeed = (Math.random() * .2) + .01
+    stars.push(Sprite({
+      x: Math.random() * canv.width,
+      y: Math.random() * 250,
+      width: randomStarSize,
+      height: randomStarSize,
+      color: '#fff',
+      opacity: 0.5,
+      dx: randomStarSpeed * -1
+    }))
+  }
+
+  let loop = GameLoop({
     update: () => {
-      // sprite.update();
-      if (isAttacking) {
-        hero.playAnimation('attack');
-      } else if (isHurt) {
-        hero.playAnimation('hurt');
-      } else {
-        hero.playAnimation('idle');
+      for (let i = 0; i < stars.length; i++) {
+        stars[i].update()
       }
+
+      hero.playAnimation(playerState);
       hero.update();
     },
-    render: () => { // render the game state
-      sprite.render();
-      hero.render();
+    render: () => {
+      for (let i = 0; i < stars.length; i++) {
+        stars[i].render()
+      }
+      planet.render();
       rock.forEach(element => {
         element.render()
       })
+
+      hero.render();
     }
   });
 
-  loop.start();    // start the game
+  loop.start();
 
   setTimeout(() => {
-    isAttacking = true;
+    playerState = 'attack';
   }, 2000);
   setTimeout(() => {
-    isAttacking = false;
+    playerState = 'idle';
   }, 5000);
   setTimeout(() => {
-    isHurt = true;
+    playerState = 'hurt';
   }, 5000);
   setTimeout(() => {
-    isHurt = false;
+    playerState = 'idle';
   }, 10000);
-
-}).catch(err => {
-  console.log(err);
 })
