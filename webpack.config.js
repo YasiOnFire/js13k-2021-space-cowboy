@@ -21,10 +21,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|woff|woff2|eot|ttf|otf)$/i,
         use: [
           {
             loader: 'file-loader',
+            options: {
+              name: '[name].[contenthash].[ext]',
+              esModule: false
+            }
           },
         ],
       },

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "rm -fr -d dist/*.png && webpack --mode production",
+    "build": "rm -fr -d dist/*.* && webpack --mode production",
     "postbuild": "node postbuild.js"
   },
   "devDependencies": {

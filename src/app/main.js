@@ -1,4 +1,4 @@
-import { init, Sprite, GameLoop, loadImage, setImagePath, SpriteSheet } from 'kontra';
+import { init, Sprite, GameLoop, loadImage, SpriteSheet, Text } from 'kontra';
 import cowboySprite from '../CowBoySmol.png'
 import { PlanetDecor } from './planet.decor';
 const STARS_COUNT = 30
@@ -7,10 +7,27 @@ canv.width = 1920
 canv.height = 1080
 let { canvas } = init(canv);
 
+const r = (min, max)=>Math.floor(Math.random() * (max - min) + min)
+
 loadImage(cowboySprite).then(image => {
   let playerState = 'idle'
   let stars = []
-  let rock = new PlanetDecor(100, 250 - 30).create()
+  let rocks = []
+  for (let i = 0; i < 4; i++) {
+    const randY = r(220, 280)
+    rocks.push(new PlanetDecor(100 * 2 * i* i, randY).create())
+  }
+
+  let text = Text({
+    text: 'SPACE COWBOY!',
+    font: '64px "8_bit_1_6"',
+    color: 'white',
+    x: 30,
+    y: -10,
+    // anchor: {x: 0.5, y: 0.5},
+    textAlign: 'center',
+    dx: 2
+  })
 
   let spriteSheet = SpriteSheet({
     image,
@@ -71,17 +88,25 @@ loadImage(cowboySprite).then(image => {
 
       hero.playAnimation(playerState);
       hero.update();
+      text.update();
+
     },
     render: () => {
       for (let i = 0; i < stars.length; i++) {
         stars[i].render()
       }
       planet.render();
-      rock.forEach(element => {
-        element.render()
+      rocks.forEach(rock => {
+        rock.forEach(element => {
+          element.render()
+        })
       })
 
       hero.render();
+      text.render();
+      if (text.x > canvas.width) {
+        text.x = -text.width;
+      }
     }
   });
 
