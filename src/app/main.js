@@ -1,4 +1,4 @@
-import { init, Sprite, GameLoop, loadImage, SpriteSheet, Text } from 'kontra';
+import { init, Sprite, GameLoop, loadImage, SpriteSheet, Text, on } from 'kontra';
 import cs from '../h.png'
 import a from '../a.png'
 import { Card } from './card';
@@ -32,7 +32,7 @@ loadImage(cs).then(image => {
       dx: -2
     })
 
-    let hero = new Hero(100, 2, image, 150, 150, 'idle')
+    let hero = new Hero(100, 2, image, 150, 150)
 
     let planet = Sprite({
       x: 0,
@@ -45,7 +45,7 @@ loadImage(cs).then(image => {
     let card = new Card(300, 600, {_a: _a, value: 3, power: 'a', cost: 9});
     let card2 = new Card(550, 600, {_a: _a, value: 5, power: 'd', cost: 7});
 
-    let enemy = new Enemy(10, 30);
+    let enemy = new Enemy(10, 30, image, 1160, 150);
 
     // make stars
     for (let i = 0; i < STARS_COUNT; i++) {
@@ -116,18 +116,23 @@ loadImage(cs).then(image => {
     //   hero.setPlayerState('idle');
     // }, 10000);
     
-    setInterval(() => {
-      hero.damageHero(1)
-    }, 5000);
-
+    const sss = setInterval(() => {
+      hero.damage(10)
+    }, 1000);
+    
+    on('hero_dead', (a) => {
+      console.log('a: ', a);
+      clearInterval(sss);
+    });
+    
     setTimeout(() => {
-      enemy.damageEnemy(1)
+      enemy.damage(1)
     }, 1000);
     setTimeout(() => {
-      enemy.damageEnemy(8)
+      enemy.damage(8)
     }, 2000);
     setTimeout(() => {
-      enemy.damageEnemy(1)
+      enemy.damage(1)
     }, 4000);
   })
 })

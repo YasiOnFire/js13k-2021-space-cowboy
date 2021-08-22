@@ -1,8 +1,8 @@
-import { Sprite, SpriteSheet } from "kontra";
+import { emit, Sprite, SpriteSheet } from "kontra";
 import { HealthBar } from "./health-bar";
 
 export class Hero {
-  constructor(health, attack, spriteSheet, x, y, playerState) {
+  constructor(health, attack, spriteSheet, x, y) {
     this.health = health;
     this.attack = attack;
     this.x = x
@@ -23,6 +23,14 @@ export class Hero {
         attack: {
           frames: '5..6',
           frameRate: 6
+        },
+        die: {
+          frames: '7..10',
+          frameRate: 4
+        },
+        dead: {
+          frames: '10..10',
+          frameRate: 0
         }
       }
     });
@@ -33,7 +41,7 @@ export class Hero {
       height: 250,
       animations: this.spriteSheet.animations
     })
-    this.playerState = playerState || 'idle'
+    this.state = 'idle'
     this.healthBar = new HealthBar(this.health, this.health, this.x + 335, this.y + 270);
   }
   draw() {
@@ -41,25 +49,30 @@ export class Hero {
     this.healthBar.draw()
   }
   update() {
-    this.sprite.playAnimation(this.playerState)
+    this.sprite.playAnimation(this.state)
     this.sprite.update()
     this.healthBar.update()
   }
-  damageHero(power) {
-    this.setPlayerState('hurt');
+  damage(power) {
+    this.setState('hurt');
+    this.health -= power;
     setTimeout(() => {
-      this.health -= power;
       this.healthBar.updateHealth(this.health);
-      this.setPlayerState('idle');
+      if (this.health <= 0) {
+        this.setState('die');
+        this.die()
+      } else {
+        this.setState('idle');
+      }  
     }, 400);
-    if (this.health <= 0) {
-      this.die()
-    }
   }
-  setPlayerState(state) {
-    this.playerState = state
+  setState(state) {
+    this.state = state
   }
   die() {
-
+    emit('hero_dead', 1)
+    setTimeout(() => {
+      this.setState('dead');
+    }, 800)
   }
 }
