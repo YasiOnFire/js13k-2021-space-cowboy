@@ -1,29 +1,29 @@
-import { Sprite, Text } from "kontra";
+import { Sprite as s, Text } from "kontra"
 
 export class HealthBar {
   constructor(current, max, x, y) {
-    this.max = max;
-    this.current = current;
-    this.x = x;
-    this.y = y;
-    this.width = 100;
-    this.sprite = [
-      Sprite({
+    this.max = max
+    this.c = current
+    this.x = x
+    this.y = y
+    this.w = 100
+    this.s = [
+      s({
         x: this.x,
         y: this.y,
-        width: this.width,
+        width: this.w,
         height: 20,
         color: "black",
       }),
-      Sprite({
+      s({
         x: this.x + 4,
         y:  this.y + 4,
-        width: this.width - 8,
+        width: this.w - 8,
         height: 20 - 8,
         color: "green",
       }),
       Text({
-        text: `${this.current}`,
+        text: `${this.c}`,
         font: '16px "8_bit_1_6"',
         color: 'white',
         x: this.x +  55,
@@ -34,21 +34,21 @@ export class HealthBar {
     ]
   }
   draw() {
-    this.sprite.forEach(sprite => {
-      sprite.render();
+    this.s.forEach(s => {
+      s.render()
     })
   }
   update() {
-    this.sprite.forEach(sprite => {
-      sprite.update();
+    this.s.forEach(s => {
+      s.update()
     })
   }
   updateHealth(current) {
-    this.current = current;
-    this.sprite[1].width = (this.current / this.max) * (this.width - 8);
-    this.sprite[2].text = `${this.current}`;
-    if (this.sprite[1].width <= 10) {
-      this.sprite[1].color = "red";
+    this.c = current
+    this.s[1].width = (this.c / this.max) * (this.w - 8)
+    this.s[2].text = `${this.c}`
+    if (this.s[1].width <= 10) {
+      this.s[1].color = "red"
     }
   }
 }

@@ -1,9 +1,9 @@
-import { getCanvas, getContext, Sprite, Text, track } from "kontra";
+import { Sprite, Text as t, track } from "kontra";
 
 export class Popup {
   constructor(title, button = {}) {
     this.title = title
-    this.sprite = [
+    this.s = [
       Sprite({
         x: 0,
         y: 0,
@@ -11,7 +11,7 @@ export class Popup {
         height: 1080,
         color: 'rgba(21,22,24,0.9)',
       }),
-      Text({
+      t({
         text: `${this.title}`,
         font: '90px "8_bit_1_6"',
         color: 'white',
@@ -20,8 +20,8 @@ export class Popup {
         anchor: { x: 0.5, y: 0.5 },
         textAlign: 'center',
       }),
-      Text({
-        text: button.text || 'START',
+      t({
+        text: button.text,
         font: '60px "8_bit_1_6"',
         color: 'white',
         x: 1920 / 2,
@@ -39,16 +39,16 @@ export class Popup {
     ]
   }
   draw() {
-    this.sprite.forEach(sprite => {
-      if (sprite.onDown) {
-        track(sprite)
+    this.s.forEach(s => {
+      if (s.onDown) {
+        track(s)
       }
-      sprite.render();
+      s.render();
     })
   }
   update() {
-    this.sprite.forEach(sprite => {
-      sprite.update();
+    this.s.forEach(s => {
+      s.update();
     })
   }
 }

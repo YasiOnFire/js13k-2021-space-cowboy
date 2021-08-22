@@ -18,6 +18,8 @@ loadImage(cs).then(image => {
     let rocks = new Rocks()
     let deck = []
     let cardsDrawn = []
+    let playerStars = 3
+    let round = 1
 
     let hero = new Hero(100, 2, image, 150, 150)
     let enemy = new Enemy(10, 30, image, 1160, 150)
@@ -40,7 +42,7 @@ loadImage(cs).then(image => {
       height: canv.height,
     })
 
-    const startGame = () => {
+    let startGame = () => {
       popup = null
       hero = new Hero(100, 2, image, 150, 150)
       enemy = new Enemy(10, 30, image, 1160, 150)
@@ -70,16 +72,19 @@ loadImage(cs).then(image => {
       }))
     }
 
-    const generateRandomDeck = () => {
+    let generateRandomDeck = () => {
       for (let i = 0; i < 20; i++) {
-        deck.push({value: Math.floor(Math.random() * 10) + 1, power: Math.random() > 0.5 ? 'a' : 'd', cost: Math.floor(Math.random() * 10) + 1})
+        deck.push({
+          value: Math.floor(Math.random() * 10) + 1,
+          power: Math.random() > 0.5 ? 'a' : 'd',
+          cost: Math.floor(Math.random() * 10) + 1
+        })
       }
     }
     generateRandomDeck()
     console.log(deck);
 
-
-    const drawCards = () => {
+    let drawCards = () => {
       // get 3 cards from deck
       cardsDrawn.push(
         new Card(300, 600, {_a, value: 3, power: 'a', cost: 9})
@@ -92,7 +97,7 @@ loadImage(cs).then(image => {
       )
     } 
 
-    const loop = GameLoop({
+    let loop = GameLoop({
       update: () => {
         for (let i = 0; i < stars.length; i++) {
           stars[i].update()
@@ -142,6 +147,7 @@ loadImage(cs).then(image => {
     // DEMO
     setTimeout(()=>{
       drawCards()
+      hero.damage(100)
     }, 3000)
   })
 })
