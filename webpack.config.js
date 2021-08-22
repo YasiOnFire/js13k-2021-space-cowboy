@@ -26,7 +26,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[contenthash].[ext]',
+              name: '[name].[ext]',
               esModule: false
             }
           },
@@ -52,7 +52,7 @@ module.exports = {
       pngquant: {
         quality: '95-100'
       }
-    })
+    }),
   ],
   devServer: {
     stats: 'minimal',
