@@ -90,4 +90,9 @@ export class Card {
       element.render()
     })
   }
+  update() {
+    this.getCard().forEach(element => {
+      element.update()
+    })
+  }
 }

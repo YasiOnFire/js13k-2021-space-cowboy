@@ -1,28 +1,28 @@
-import { init, Sprite, GameLoop, loadImage, SpriteSheet, Text, on } from 'kontra';
+import { init, Sprite, GameLoop, loadImage, Text, on, initPointer } from 'kontra'
 import cs from '../h.png'
 import a from '../a.png'
-import { Card } from './card';
-import { PlanetDecor } from './planet.decor';
-import { Enemy } from './enemy';
-import { Hero } from './hero';
+import { Card } from './card'
+import { Rocks } from './rocks'
+import { Enemy } from './enemy'
+import { Hero } from './hero'
+import { Popup } from './popup'
 const STARS_COUNT = 30
-const canv = document.getElementById('a');
+const canv = document.getElementById('a')
 canv.width = 1920
 canv.height = 1080
-let { canvas } = init(canv);
-
-const r = (min, max)=>Math.floor(Math.random() * (max - min) + min)
+let { canvas } = init(canv)
 
 loadImage(cs).then(image => {
   loadImage(a).then(_a => {
     let stars = []
-    let rocks = []
-    for (let i = 0; i < 4; i++) {
-      const randY = r(220, 280)
-      rocks.push(new PlanetDecor(100 * 2 * i* i, randY).create())
-    }
+    let rocks = new Rocks()
+    let deck = []
+    let cardsDrawn = []
 
-    let text = Text({
+    let hero = new Hero(100, 2, image, 150, 150)
+    let enemy = new Enemy(10, 30, image, 1160, 150)
+    
+    let intro = Text({
       text: 'SPACE COWBOY!',
       font: '64px "8_bit_1_6"',
       color: 'white',
@@ -32,20 +32,28 @@ loadImage(cs).then(image => {
       dx: -2
     })
 
-    let hero = new Hero(100, 2, image, 150, 150)
-
     let planet = Sprite({
       x: 0,
       y: 250,
       color: '#ddd',
       width: canv.width,
       height: canv.height,
-    });
-    
-    let card = new Card(300, 600, {_a: _a, value: 3, power: 'a', cost: 9});
-    let card2 = new Card(550, 600, {_a: _a, value: 5, power: 'd', cost: 7});
+    })
 
-    let enemy = new Enemy(10, 30, image, 1160, 150);
+    const startGame = () => {
+      popup = null
+      hero = new Hero(100, 2, image, 150, 150)
+      enemy = new Enemy(10, 30, image, 1160, 150)
+      deck = []
+    }
+
+    let popup = new Popup(
+      'PLAY\nSPACE COWBOY!',
+      {
+        text: 'START',
+        callback: () => (startGame()),
+      }
+    )
 
     // make stars
     for (let i = 0; i < STARS_COUNT; i++) {
@@ -62,77 +70,78 @@ loadImage(cs).then(image => {
       }))
     }
 
-    let loop = GameLoop({
+    const generateRandomDeck = () => {
+      for (let i = 0; i < 20; i++) {
+        deck.push({value: Math.floor(Math.random() * 10) + 1, power: Math.random() > 0.5 ? 'a' : 'd', cost: Math.floor(Math.random() * 10) + 1})
+      }
+    }
+    generateRandomDeck()
+    console.log(deck);
+
+
+    const drawCards = () => {
+      // get 3 cards from deck
+      cardsDrawn.push(
+        new Card(300, 600, {_a, value: 3, power: 'a', cost: 9})
+      )
+      cardsDrawn.push(
+        new Card(550, 600, {_a, value: 5, power: 'd', cost: 7})
+      )
+      cardsDrawn.push(
+        new Card(800, 600, {_a, value: 1, power: 'a', cost: 2})
+      )
+    } 
+
+    const loop = GameLoop({
       update: () => {
         for (let i = 0; i < stars.length; i++) {
           stars[i].update()
         }
         
-        hero.update();
-        text.update();
+        hero.update()
+        intro.update()
 
-        enemy.update();
-        
-        card.draw();
-        card2.draw();
+        enemy.update()
+
+        cardsDrawn.forEach(card => {
+          card.update()
+        })
+
+        if (popup) {
+          popup.update()
+        }
       },
       render: () => {
         for (let i = 0; i < stars.length; i++) {
           stars[i].render()
         }
-        planet.render();
+        planet.render()
 
-        rocks.forEach(rock => {
-          rock.forEach(element => {
-            element.render()
-          })
-        })
+        rocks.draw()
               
-        hero.draw();
-        text.render();
+        hero.draw()
+        intro.render()
+        enemy.draw()
 
-        enemy.draw();
+        cardsDrawn.forEach(card => {
+          card.draw()
+        })
 
-        card.draw();
-        card2.draw();
-        if (text.x < text.width * -1) {
-          text.x = canvas.width;
+        if (popup) {
+          popup.draw()
+        }
+        if (intro.x < intro.width * -1) {
+          intro.x = canvas.width
         }
       }
-    });
+    })
 
-    loop.start();
+    initPointer()
+    loop.start()
 
-    // setTimeout(() => {
-    //   hero.setPlayerState('attack');
-    // }, 2000);
-    // setTimeout(() => {
-    //   hero.setPlayerState('idle');
-    // }, 5000);
-    // setTimeout(() => {
-    //   hero.setPlayerState('hurt');
-    // }, 5000);
-    // setTimeout(() => {
-    //   hero.setPlayerState('idle');
-    // }, 10000);
-    
-    const sss = setInterval(() => {
-      hero.damage(10)
-    }, 1000);
-    
-    on('hero_dead', (a) => {
-      console.log('a: ', a);
-      clearInterval(sss);
-    });
-    
-    setTimeout(() => {
-      enemy.damage(1)
-    }, 1000);
-    setTimeout(() => {
-      enemy.damage(8)
-    }, 2000);
-    setTimeout(() => {
-      enemy.damage(1)
-    }, 4000);
+    // DEMO
+    setTimeout(()=>{
+      drawCards()
+    }, 3000)
   })
 })
