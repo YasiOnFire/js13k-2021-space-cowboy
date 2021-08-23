@@ -12,6 +12,9 @@ canv.width = 1920
 canv.height = 1080
 let { canvas } = init(canv)
 
+// TODO: refactor - rocks, stars, popup, planet as a single object
+// try upgrade html webpack plugin
+
 loadImage(cs).then(image => {
   loadImage(a).then(_a => {
     let stars = []
