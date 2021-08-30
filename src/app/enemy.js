@@ -7,27 +7,27 @@ export class Enemy extends Hero {
     super(health, attack, spriteSheet, x, y)
     this.spriteSheet = SpriteSheet({
       image: spriteSheet,
-      frameWidth: 23,
-      frameHeight: 10,
+      frameWidth: 17,
+      frameHeight: 8,
       animations: {
         idle: {
           frames: '0..0',
           frameRate: 2
         },
         hurt: {
-          frames: '0..4',
-          frameRate: 12
+          frames: '3..4',
+          frameRate: 4
         },
         attack: {
-          frames: '5..6',
+          frames: '1..2',
           frameRate: 6
         },
         die: {
-          frames: '7..10',
-          frameRate: 4
+          frames: '4..9',
+          frameRate: 3
         },
         dead: {
-          frames: '10..10',
+          frames: '9..9',
           frameRate: 0
         }
       }
@@ -35,11 +35,11 @@ export class Enemy extends Hero {
     this.sprite = Sprite({
       x: this.x,
       y: this.y, 
-      width: 575,
-      height: 250,
+      width: 425,
+      height: 200,
       animations: this.spriteSheet.animations
     })
-    this.healthBar = new HealthBar(this.health, this.health, this.x, this.y + 220);
+    this.healthBar = new HealthBar(this.health, this.health, this.x + 140, this.y + 220);
   }
   
   die() {

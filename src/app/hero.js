@@ -69,10 +69,16 @@ export class Hero {
   setState(state) {
     this.state = state
   }
+  attackEnemy() {
+    this.setState('attack');
+    setTimeout(() => {
+      this.setState('idle');
+    }, 600);
+  }
   die() {
-    emit('hero_dead', 1)
     setTimeout(() => {
       this.setState('dead');
+      emit('hero_dead', 1)
     }, 800)
   }
 }

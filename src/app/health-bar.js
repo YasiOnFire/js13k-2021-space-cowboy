@@ -23,7 +23,7 @@ export class HealthBar {
         color: "green",
       }),
       Text({
-        text: `${this.c}`,
+        text: `${this.c}!${max}`,
         font: '16px "8_bit_1_6"',
         color: 'white',
         x: this.x +  55,
@@ -46,7 +46,7 @@ export class HealthBar {
   updateHealth(current) {
     this.c = current
     this.s[1].width = (this.c / this.max) * (this.w - 8)
-    this.s[2].text = `${this.c}`
+    this.s[2].text = `${this.c}!${this.max}`
     if (this.s[1].width <= 10) {
       this.s[1].color = "red"
     }

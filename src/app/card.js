@@ -26,10 +26,10 @@ export class Card {
   }
   getCard() {
     const icon = s({
-      x: this._x + 100,
-      y: this._y + 200,
-      width: 100,
-      height: 100,
+      x: this._x + 150,
+      y: this._y + 70,
+      width: 70,
+      height: 70,
       anchor: {x: 0.5, y: 0.5},
       animations: this.ss.animations
     })
@@ -55,7 +55,7 @@ export class Card {
       }),
       s({
         x: this._x + 50,
-        y: this._y + 60,
+        y: this._y + 70,
         color: '#ffc363',
         radius: 40,
         render: function() {
@@ -72,15 +72,25 @@ export class Card {
         font: '70px "8_bit_1_6"',
         color: 'black',
         x: this._x +  30,
-        y: this._y + 10,
+        y: this._y + 20,
         textAlign: 'center',
       }),
+      // t({
+      //   text: this.value,
+      //   font: '40px "8_bit_1_6"',
+      //   color: 'black',
+      //   x: this._x +  150,
+      //   y: this._y + 210,
+      //   textAlign: 'center',
+      // }),
       t({
-        text: this.value,
-        font: '40px "8_bit_1_6"',
+        text: `ATTACK SAD
+GIT`,
+        font: '24px "8_bit_1_6"',
         color: 'black',
-        x: this._x +  150,
-        y: this._y + 210,
+        x: this._x + 100,
+        y: this._y + 200,
+        anchor: {x: .5, y: 0.5},
         textAlign: 'center',
       })
     ]
